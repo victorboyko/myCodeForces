@@ -1,10 +1,8 @@
 package com.codeforces.victor;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,6 +58,7 @@ public class Problem455A {
 
 	}
 	
+	// incomplete
 	public static void implementation(InputStream in, PrintStream out) throws Exception {
 		Scanner sc = new Scanner(new BufferedInputStream(in));
 		Sets sets = new Sets();
@@ -68,40 +67,48 @@ public class Problem455A {
 		sets.set(Collections.max(sets.keySet()) + 1, 0);
 		long result = 0;
 		long cnt1, cnt2;
+		List<Integer> keys = new ArrayList<Integer>(sets.keySet());
+		Collections.sort(keys);
 		do {
-			List<Integer> keys = new ArrayList<Integer>(sets.keySet());
-			Collections.sort(keys);
-			
 			cnt1 = cnt2 = 0;
-			
+			int iFinal = keys.size() - 2;
 			for(int i = 1; i < keys.size() - 1; i++) {
 				int key = keys.get(i);
 				int val = key * sets.get(key);
 				if (key % 2 == 0) {
 					if (cnt2-cnt1 >= val) {
+						iFinal = i;
 						break;
 					}
 					cnt1 += val ;
 				} else {
 					if (cnt1-cnt2 >= val) {
+						iFinal = i;
 						break;
 					}
 					cnt2 += val;
 				}
 			}
 			
-			for(int i = 1; i < keys.size() - 1; i++) {
+			for(int i = 1; i <= iFinal /* i < keys.size() - 1*/; i++) {
 				int key;
 				if (((key = keys.get(i)) % 2 == 0) == (cnt1 > cnt2)) {
 					result += key * sets.get(key);
-					if (i + 1< keys.size() - 1) { // removal sequence is essential, bigger indexes first
+					if (i + 1< keys.size() - 1) { // removal sequence is essential, bigger indexes come first
+						keys.remove(i + 1);
+						iFinal--;
 						sets.removeAll(key + 1);
 					}
+					keys.remove(i);
+					iFinal--;
+					i--;
 					sets.removeAll(key);
-					if (i - 1 > 0) {
+					if (i - 1 >= 0) {
+						keys.remove(i);
+						iFinal--;
+						i--;
 						sets.removeAll(key - 1);
 					}
-					break;
 				}
 			}
 			

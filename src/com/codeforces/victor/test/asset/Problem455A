@@ -4,6 +4,11 @@ input
 output
 9
 input
+10
+10 5 8 9 5 6 8 7 2 8
+output
+46
+input
 5
 3 3 4 5 4
 output
